@@ -12,6 +12,7 @@ const gameRoomSchema = new mongoose.Schema(
     hostUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
 
     players: [
@@ -50,6 +51,17 @@ const gameRoomSchema = new mongoose.Schema(
       default: "classic",
     },
 
+    maxPlayers: { type: Number, default: 8 },
+    roundTimeLimit: { type: Number, default: 45 }, // in seconds
+    language: { type: String, default: "en" },
+    allowMidGameJoin: { type: Boolean, default: false },
+    privateRoom: { type: Boolean, default: true },
+    scoreMode: {
+      type: String,
+      enum: ["normal", "double", "sudden-death"],
+      default: "normal",
+    },
+
     rounds: [
       {
         roundNumber: Number,
@@ -80,4 +92,5 @@ const gameRoomSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.models.GameRoom || mongoose.model("GameRoom", gameRoomSchema);
+export default mongoose.models.GameRoom ||
+  mongoose.model("GameRoom", gameRoomSchema);

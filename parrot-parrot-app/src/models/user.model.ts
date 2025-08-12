@@ -1,6 +1,5 @@
 import ROLES_LIST from "@/constants/roles";
-
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -76,4 +75,3 @@ const userSchema = new mongoose.Schema(
 );
 
 export default mongoose.models.User || mongoose.model("User", userSchema);
-
