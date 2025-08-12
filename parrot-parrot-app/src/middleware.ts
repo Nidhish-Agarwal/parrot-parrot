@@ -1,22 +1,20 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
-import {REFRESH_TOKEN_SECRET } from './lib/env';
-import { jwtVerify } from 'jose';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { jwtVerify } from "jose";
 
 export async function middleware(req: NextRequest) {
-  const token = req.cookies.get('jwt')?.value;
+  const token = req.cookies.get("jwt")?.value;
 
   let currentPath = req.nextUrl.pathname + req.nextUrl.search;
-  if (!currentPath.startsWith('/')) currentPath = '/';
+  if (!currentPath.startsWith("/")) currentPath = "/";
 
-  const redirectUrl = new URL('/login', req.url);
-  redirectUrl.searchParams.set('from', currentPath); 
+  const redirectUrl = new URL("/login", req.url);
+  redirectUrl.searchParams.set("from", currentPath);
 
   if (!token) return NextResponse.redirect(redirectUrl);
 
   try {
-    const secret = new TextEncoder().encode(REFRESH_TOKEN_SECRET);
+    const secret = new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET);
     await jwtVerify(token, secret);
 
     return NextResponse.next();
@@ -26,5 +24,5 @@ export async function middleware(req: NextRequest) {
   }
 }
 export const config = {
-  matcher: ['/dashboard/:path*', '/profile/:path*', '/test/:path*'], // Apply middleware to these paths
+  matcher: ["/lobby/:path*", "/profile/:path*", "/test/:path*", "/room/:path"], // Apply middleware to these paths
 };
